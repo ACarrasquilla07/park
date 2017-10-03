@@ -5,42 +5,69 @@ import static org.junit.Assert.*;
 import java.util.Calendar;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import dominio.Carro;
 import dominio.Moto;
 import dominio.Recibo;
 import dominio.Vehiculo;
 import dominio.Vigilante;
-import dominio.reglas.ReglaMotoAltoCilindraje;
+import dominio.excepcion.IngresoExcepcion;
 import dominio.util.Utilidad;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class ParqueaderooApplicationTests {
-
-	@Test
-	public void contextLoads() {
-	}
-	
+public class ParqueaderoTests {
 	@Test
 	public void ingresarCarro() {
 		Vehiculo carro = new Carro("KHS558");
 		Vigilante vigilante = new Vigilante();
 		Calendar horaIngreso = Calendar.getInstance();
 		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
-		assertTrue( carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()) );
+		assertTrue( carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
 	}
 	
 	@Test
-	public void ingresarCarroPlacaRestringida() {
+	public void ingresarCarroPlacaRestringidaViernes() {
+		Vehiculo carro = new Carro("AKS982");
+		Vehiculo carro2 = new Carro("ALO000");
+		Vigilante vigilante = new Vigilante();
+		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 6, 8, 0);
+		Calendar horaIngreso2 = Utilidad.crearHora(2020, Calendar.OCTOBER, 14, 8, 0);
+		try {
+			vigilante.ingresarVehiculo(carro, horaIngreso);
+			fail();
+		} catch (IngresoExcepcion e) {
+			assertEquals("No puede ingresar porque no esta en un dia habil", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void ingresarCarroPlacaRestringidaMiercoles() {
+		Vehiculo carro2 = new Carro("ALO000");
+		Vigilante vigilante = new Vigilante();
+		Calendar horaIngreso2 = Utilidad.crearHora(2020, Calendar.OCTOBER, 14, 8, 0);
+		try {
+			vigilante.ingresarVehiculo(carro2, horaIngreso2);
+			fail();
+		} catch (IngresoExcepcion e) {
+			assertEquals("No puede ingresar porque no esta en un dia habil", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void ingresarCarroPlacaRestringidaDiaHabilDomingo() {
 		Vehiculo carro = new Carro("AKS982");
 		Vigilante vigilante = new Vigilante();
-		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 4, 8, 0);
+		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 8, 8, 0);
 		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
-		fail();
+		assertTrue( carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
+	}
+	
+	@Test
+	public void ingresarCarroPlacaRestringidaDiaHabilLunes() {
+		Vehiculo carro = new Carro("AKS982");
+		Vigilante vigilante = new Vigilante();
+		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 9, 8, 0);
+		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
+		assertTrue( carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
 	}
 	
 	@Test

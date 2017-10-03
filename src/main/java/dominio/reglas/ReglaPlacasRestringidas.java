@@ -1,9 +1,6 @@
 package dominio.reglas;
 
 import java.util.Calendar;
-
-import javax.sound.midi.Soundbank;
-
 import dominio.Recibo;
 import dominio.excepcion.IngresoExcepcion;
 
@@ -13,8 +10,7 @@ public class ReglaPlacasRestringidas implements ReglaIngreso{
 	
 	@Override
 	public Recibo verificarPosibilidadIngreso(Recibo reciboIngreso) {
-		System.out.println("------------------------------ "+ reciboIngreso.getVehiculo().getPlaca().substring(0,1));
-		if(reciboIngreso.getVehiculo().getPlaca().substring(0,1)==LETRA_INICIO_RESTRINGIDA) {
+		if(reciboIngreso.getVehiculo().getPlaca().substring(0,1).equals(LETRA_INICIO_RESTRINGIDA)) {
 			boolean noEsDomingo = reciboIngreso.getHoraIngreso().get(Calendar.DAY_OF_WEEK)!=Calendar.SUNDAY;
 			boolean noEsLunes = reciboIngreso.getHoraIngreso().get(Calendar.DAY_OF_WEEK)!=Calendar.MONDAY;		
 			if(noEsDomingo && noEsLunes) {
@@ -23,6 +19,4 @@ public class ReglaPlacasRestringidas implements ReglaIngreso{
 		}
 		return reciboIngreso;
 	}
-	
-	
 }

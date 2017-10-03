@@ -10,7 +10,6 @@ public class Moto extends Vehiculo{
 
 	public Moto(String placa) {
 		super(placa);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Moto(String placa, int cilindraje) {

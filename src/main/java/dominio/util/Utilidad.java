@@ -10,8 +10,8 @@ public class Utilidad {
 		horaYFecha.set(Calendar.MONTH, mes);
 		horaYFecha.set(Calendar.DAY_OF_MONTH, diaMes);
 		// or 24-hour clock
-		horaYFecha.set(Calendar.HOUR_OF_DAY, 13);
-		horaYFecha.set(Calendar.MINUTE, 30);
+		horaYFecha.set(Calendar.HOUR_OF_DAY, hora);
+		horaYFecha.set(Calendar.MINUTE, minutos);
 		horaYFecha.set(Calendar.SECOND, 0);
 		horaYFecha.set(Calendar.MILLISECOND, 0);
 		return horaYFecha;

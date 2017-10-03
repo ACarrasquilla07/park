@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import dominio.Carro;
 import dominio.Moto;
 import dominio.Recibo;
-import dominio.Vehiculo;
 import dominio.Vigilante;
 
 @EnableAutoConfiguration

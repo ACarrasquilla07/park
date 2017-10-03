@@ -17,12 +17,7 @@ public class Recibo {
 	public Calendar getHoraIngreso() {
 		return horaIngreso;
 	}
-	public Calendar getHoraSalida() {
-		return horaSalida;
-	}
-	public void setHoraSalida(Calendar horaSalida) {
-		this.horaSalida = horaSalida;
-	}
+
 	public Vehiculo getVehiculo() {
 		return vehiculo;
 	}
