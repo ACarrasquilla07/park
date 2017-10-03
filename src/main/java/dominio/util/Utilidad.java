@@ -3,6 +3,10 @@ package dominio.util;
 import java.util.Calendar;
 
 public class Utilidad {
+	
+	private Utilidad() {
+	}
+
 	public static Calendar crearHora(int anio, int mes, int diaMes, int hora, int minutos) {
 		Calendar horaYFecha = Calendar.getInstance();
 		horaYFecha.set(Calendar.YEAR, anio);

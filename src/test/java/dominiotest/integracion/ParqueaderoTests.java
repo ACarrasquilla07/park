@@ -86,7 +86,6 @@ public class ParqueaderoTests {
 		Calendar horaIngreso = Calendar.getInstance();
 		Recibo reciboEntrada = vigilante.ingresarVehiculo(carro, horaIngreso);
 		assertTrue(carro.getPlaca().equals(reciboEntrada.getVehiculo().getPlaca()));
-		Recibo reciboSalida = vigilante.retirarVehiculo(reciboEntrada);
 	}
 	
 	@Test

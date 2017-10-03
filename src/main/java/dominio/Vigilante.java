@@ -24,12 +24,4 @@ public class Vigilante {
 		//Ingresar a la base de datos el recibo
 		return recibo;
 	}
-
-	public Recibo retirarVehiculo(Recibo reciboEntrada) {
-			
-		//Recibo reciboSalida = traer recibo de la base de datos 
-		//Hacer las reglas para cobrar la salida
-		return null;
-	}
-
 }
