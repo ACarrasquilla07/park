@@ -13,6 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
 
 group = 'com.parqueaderoo'
 version = '0.0.1-SNAPSHOT'
@@ -30,9 +31,4 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
-test {
-	jacoco{
-		append = false
-		destinationFile = file("jacoco/test.exec")
-	}
-}
+

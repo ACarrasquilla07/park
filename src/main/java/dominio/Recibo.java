@@ -4,7 +4,6 @@ import java.util.Calendar;
 
 public class Recibo {
 	private Calendar horaIngreso;
-	private Calendar horaSalida;
 	private Vehiculo vehiculo;
 	private double precio;
 	
