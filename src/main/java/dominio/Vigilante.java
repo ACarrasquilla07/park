@@ -1,19 +1,25 @@
 package dominio;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import dominio.excepcion.IngresoExcepcion;
 import dominio.reglas.ReglaIngreso;
-import dominio.reglas.ReglaMotoAltoCilindraje;
-import dominio.reglas.ReglaPlacasRestringidas;
+import dominio.repositorio.RepositorioRecibo;
+import dominio.repositorio.RepositorioVehiculo;
 
 public class Vigilante {
 	private List<ReglaIngreso> reglasIngreso = new ArrayList<>();
-	
-	public Vigilante() {	
-		reglasIngreso.add(new ReglaMotoAltoCilindraje());
-		reglasIngreso.add(new ReglaPlacasRestringidas());
+	private RepositorioRecibo repositorioRecibo;
+	private RepositorioVehiculo repositorioVehiculo;
+
+	public Vigilante(RepositorioRecibo repoRecibo,RepositorioVehiculo repoVehiculo, List<ReglaIngreso> reglasIngreso) {
+		this.repositorioRecibo = repoRecibo;
+		this.reglasIngreso=reglasIngreso;
+		this.repositorioVehiculo = repoVehiculo;
 	}
 
 	public Recibo ingresarVehiculo(Vehiculo vehiculo, Calendar horaIngreso) {
@@ -21,7 +27,16 @@ public class Vigilante {
 		for(ReglaIngreso regla : reglasIngreso) {
 			recibo = regla.verificarPosibilidadIngreso(recibo);
 		}
-		//Ingresar a la base de datos el recibo
+		registrarVehiculo(vehiculo);
+		repositorioRecibo.ingresarRecibo(recibo);
 		return recibo;
+	}
+	
+	private void registrarVehiculo(Vehiculo vehiculo) {
+		try {
+			repositorioVehiculo.encontrarVehiculoPorPlaca(vehiculo.getPlaca());			
+		} catch (Exception e) {
+			repositorioVehiculo.registrarVehiculo(vehiculo);
+		}
 	}
 }

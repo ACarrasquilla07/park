@@ -8,10 +8,6 @@ public class Moto extends Vehiculo{
 	public Moto() {
 	}
 
-	public Moto(String placa) {
-		super(placa);
-	}
-
 	public Moto(String placa, int cilindraje) {
 		super(placa);
 		this.cilindraje = cilindraje;
