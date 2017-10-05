@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import dominio.Vigilante;
 import dominio.reglas.ReglaCeldasCarroMaximo;
+import dominio.reglas.ReglaCeldasMotoMaximo;
 import dominio.reglas.ReglaIngreso;
 import dominio.reglas.ReglaMotoAltoCilindraje;
 import dominio.reglas.ReglaPlacasRestringidas;
@@ -20,7 +21,8 @@ public class VigilanteConfig {
 		List<ReglaIngreso> reglaIngresos = new ArrayList<>();
 		reglaIngresos.add(new ReglaMotoAltoCilindraje());
 		reglaIngresos.add(new ReglaPlacasRestringidas());
-		//reglaIngresos.add(new ReglaCeldasCarroMaximo(repositorioRecibo));
+		reglaIngresos.add(new ReglaCeldasCarroMaximo(repositorioRecibo));
+		reglaIngresos.add(new ReglaCeldasMotoMaximo(repositorioRecibo));
 		return new Vigilante(repositorioRecibo, repositorioVehiculo,reglaIngresos);
 		
 	}

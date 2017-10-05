@@ -23,6 +23,8 @@ import rest.ParqueaderooApplication;
 @SpringBootTest(classes= {ParqueaderooApplication.class})
 @DataJpaTest
 public class ParqueaderoTests {
+	private static final int CAPACIDAD_MAXIMA_MOTOS = 10;
+	private static final int CAPACIDAD_MAXIMA_CARROS = 20;
 	@Autowired
 	private Vigilante vigilante;
 	@Test
@@ -103,8 +105,59 @@ public class ParqueaderoTests {
 		Vehiculo BMW900 = new Moto("DNS00A", 125);
 		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
 		Recibo reciboIngreso = vigilante.ingresarVehiculo(BMW900, horaIngreso);
-		assertTrue(BMW900.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));	
 		assertTrue(reciboIngreso.getPrecio()==0d);
+		assertTrue(BMW900.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));			
 	}	
 	
+	@Test
+	public void ingresarMasDelMaximoDeCarros() {
+		String[] Placas = {"BBB001","BBB002","BBB003","BBB004","BBB005","BBB006","BBB007","BBB008","BBB009","BBB010","BBB011",
+				"BBB012","BB0013","BB0014","BBB015","BBB016","BBB017","BBB018","BBB019","BBB020","BBB021","BBB022"};
+		Vehiculo carro;
+		Calendar horaIngreso = Calendar.getInstance();
+		
+		for (int i = 0; i < CAPACIDAD_MAXIMA_CARROS; i++) {
+			carro = new Carro(Placas[i]);
+			Recibo reciboIngreso = vigilante.ingresarVehiculo(carro, horaIngreso);
+			assertTrue(carro.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
+		}
+		carro = new Carro(Placas[20]);
+		try {
+			vigilante.ingresarVehiculo(carro, horaIngreso);
+		} catch (Exception e) {
+			assertEquals("No hay celdas para carros disponibles", e.getMessage());
+		}
+		carro = new Carro(Placas[21]);
+		try {
+			vigilante.ingresarVehiculo(carro, horaIngreso);
+		} catch (Exception e) {
+			assertEquals("No hay celdas para carros disponibles", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void ingresarMasDelMaximoDeMotos() {
+		String[] Placas = {"BBB001A","BBB002A","BBB003A","BBB004A","BBB005A","BBB006A","BBB007A","BBB008A","BBB009A","BBB010A","BBB011A",
+				"BBB012A","BB0013A","BB0014A"};
+		Vehiculo moto;
+		Calendar horaIngreso = Calendar.getInstance();
+		
+		for (int i = 0; i < CAPACIDAD_MAXIMA_MOTOS; i++) {
+			moto = new Moto(Placas[i],125);
+			Recibo reciboIngreso = vigilante.ingresarVehiculo(moto, horaIngreso);
+			assertTrue(moto.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
+		}
+		moto = new Moto(Placas[10],125);
+		try {
+			vigilante.ingresarVehiculo(moto, horaIngreso);
+		} catch (Exception e) {
+			assertEquals("No hay celdas para motos disponibles", e.getMessage());
+		}
+		moto = new Moto(Placas[11],125);
+		try {
+			vigilante.ingresarVehiculo(moto, horaIngreso);
+		} catch (Exception e) {
+			assertEquals("No hay celdas para motos disponibles", e.getMessage());
+		}
+	}
 }

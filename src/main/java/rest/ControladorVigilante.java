@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.core.sym.Name;
-
 import dominio.Carro;
 import dominio.Moto;
 import dominio.Recibo;

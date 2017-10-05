@@ -13,9 +13,9 @@ import javax.persistence.NamedQuery;
 
 @Entity(name = "Recibo")
 @NamedQueries({
-	//@NamedQuery(name = "Recibo.findByPlaca", query = "SELECT recibo from Recibo recibo where Recibo.vehiculoEntity.placa = :placa"),
+	@NamedQuery(name = "Recibo.findByPlaca", query = "SELECT recibo from Recibo recibo where recibo.vehiculoEntity.placa = :placa"),
 	@NamedQuery(name = "Recibo.findAll", query = "SELECT recibo from Recibo recibo"),
-	@NamedQuery(name="Recibo.contar", query = "SELECT COUNT(recibo) from  Recibo recibo")
+	@NamedQuery(name="Recibo.contar", query = "SELECT COUNT(*) from  Recibo recibo WHERE recibo.vehiculoEntity.tipo = :tipo")
 })
 public class ReciboEntity {
 	@Id
@@ -35,40 +35,16 @@ public class ReciboEntity {
 	@Column
 	private double precio;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Calendar getHoraIngreso() {
-		return horaIngreso;
-	}
-
 	public void setHoraIngreso(Calendar horaIngreso) {
 		this.horaIngreso = horaIngreso;
 	}
-
-	public Calendar getHoraSalida() {
-		return horaSalida;
-	}
-
+	
 	public void setHoraSalida(Calendar horaSalida) {
 		this.horaSalida = horaSalida;
 	}
 
-	public double getPrecio() {
-		return precio;
-	}
-
 	public void setPrecio(double precio) {
 		this.precio = precio;
-	}
-
-	public VehiculoEntity getVehiculoEntity() {
-		return vehiculoEntity;
 	}
 
 	public void setVehiculoEntity(VehiculoEntity vehiculoEntity) {

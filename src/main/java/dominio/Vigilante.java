@@ -1,12 +1,8 @@
 package dominio;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import dominio.excepcion.IngresoExcepcion;
 import dominio.reglas.ReglaIngreso;
 import dominio.repositorio.RepositorioRecibo;
 import dominio.repositorio.RepositorioVehiculo;
