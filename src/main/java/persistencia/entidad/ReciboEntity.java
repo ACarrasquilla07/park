@@ -13,7 +13,8 @@ import javax.persistence.NamedQuery;
 
 @Entity(name = "Recibo")
 @NamedQueries({
-	@NamedQuery(name = "Recibo.findByPlaca", query = "SELECT recibo from Recibo recibo where recibo.vehiculoEntity.placa = :placa"),
+	//@NamedQuery(name = "Recibo.findActivoByPlaca", query = "SELECT recibo from Recibo recibo WHERE recibo.vehiculoEntity.placa = :placa AND recibo.horaSalida IS NULL")
+	@NamedQuery(name = "Recibo.findActivoByPlaca", query = "SELECT recibo FROM Recibo recibo WHERE recibo.vehiculoEntity.placa = :placa"),
 	@NamedQuery(name = "Recibo.findAll", query = "SELECT recibo from Recibo recibo"),
 	@NamedQuery(name="Recibo.contar", query = "SELECT COUNT(*) from  Recibo recibo WHERE recibo.vehiculoEntity.tipo = :tipo")
 })
@@ -50,4 +51,21 @@ public class ReciboEntity {
 	public void setVehiculoEntity(VehiculoEntity vehiculoEntity) {
 		this.vehiculoEntity = vehiculoEntity;
 	}
+
+	public VehiculoEntity getVehiculoEntity() {
+		return vehiculoEntity;
+	}
+
+	public Calendar getHoraIngreso() {
+		return horaIngreso;
+	}
+
+	public Calendar getHoraSalida() {
+		return horaSalida;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+	
 }

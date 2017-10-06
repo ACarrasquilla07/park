@@ -11,6 +11,7 @@ public class Recibo {
 	public Recibo(Vehiculo vehiculo, Calendar horaIngreso1) {
 		this.vehiculo = vehiculo;
 		this.horaIngreso = horaIngreso1;
+		this.horaSalida=null;
 		this.precio = 0d;
 	}
 	public Calendar getHoraIngreso() {

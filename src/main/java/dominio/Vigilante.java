@@ -19,20 +19,22 @@ public class Vigilante {
 	}
 
 	public Recibo ingresarVehiculo(Vehiculo vehiculo, Calendar horaIngreso) {
-		Recibo recibo = new Recibo(vehiculo, horaIngreso);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(vehiculo, horaIngreso);
+		Recibo recibo = null;
 		for(ReglaIngreso regla : reglasIngreso) {
-			recibo = regla.verificarPosibilidadIngreso(recibo);
+			recibo = regla.verificarPosibilidadIngreso(solicitudIngreso);
 		}
+		
 		registrarVehiculo(vehiculo);
 		repositorioRecibo.ingresarRecibo(recibo);
-		return recibo;
+		return recibo;		
 	}
 	
 	private void registrarVehiculo(Vehiculo vehiculo) {
 		try {
-			repositorioVehiculo.encontrarVehiculoPorPlaca(vehiculo.getPlaca());			
+			repositorioVehiculo.encontrarVehiculoPorPlaca(vehiculo.getPlaca());	//--------------- 
 		} catch (Exception e) {
 			repositorioVehiculo.registrarVehiculo(vehiculo);
 		}
-	}
+	}	
 }

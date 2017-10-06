@@ -1,15 +1,18 @@
 package persistencia.repositorio;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import dominio.Recibo;
 import dominio.repositorio.RepositorioRecibo;
+import persistencia.builder.ReciboBuilder;
 import persistencia.entidad.ReciboEntity;
 import persistencia.entidad.VehiculoEntity;
 
 @Repository
 public class RepositorioReciboPersistente implements RepositorioRecibo {
+	private static final String RECIBO_FIND_ACTIVO_BY_PLACA = "Recibo.findActivoByPlaca";
 	EntityManager entityManager;
 
 	public RepositorioReciboPersistente(EntityManager entityManager) {
@@ -41,5 +44,18 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 		query.setParameter("tipo", tipoVehiculo);
 		return (Long) query.getSingleResult();
 	}
-
+	
+	@SuppressWarnings("rawtypes")
+	private ReciboEntity findReciboActivoByPlaca(String placa) {
+		Query query = entityManager.createNamedQuery(RECIBO_FIND_ACTIVO_BY_PLACA);
+		query.setParameter("placa", placa);
+		List resultList = query.getResultList();
+		return !resultList.isEmpty() ? (ReciboEntity) resultList.get(0) : null;
+	}
+	
+	@Override
+	public Recibo obtenerReciboActivoPorPlaca(String placa) {
+		ReciboEntity reciboEntity = findReciboActivoByPlaca(placa);
+		return ReciboBuilder.convertirARecibo(reciboEntity != null ? reciboEntity : null);
+	}
 }

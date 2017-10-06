@@ -1,8 +1,11 @@
-package dominio.reglas;
+package dominio.reglas.ingresoreglas;
 
+import dominio.Carro;
 import dominio.ConstantesParqueadero;
 import dominio.Recibo;
+import dominio.SolicitudIngreso;
 import dominio.excepcion.IngresoExcepcion;
+import dominio.reglas.ReglaIngreso;
 import dominio.repositorio.RepositorioRecibo;
 import persistencia.builder.VehiculoBuilder;
 
@@ -15,10 +18,14 @@ public class ReglaCeldasCarroMaximo implements ReglaIngreso{
 	}
 
 	@Override
-	public Recibo verificarPosibilidadIngreso(Recibo reciboIngreso) {
+	public Recibo verificarPosibilidadIngreso(SolicitudIngreso solicitudIngreso) {
+		Recibo recibo = new Recibo(solicitudIngreso.getVehiculo(), solicitudIngreso.getHoraIngreso());
+		if(!(solicitudIngreso.getVehiculo() instanceof Carro)) {
+			return recibo;
+		}
 		if(repositorioRecibo.numeroRecibos(VehiculoBuilder.TIPO_CARRO) >= ConstantesParqueadero.MAXIMO_CARROS) { 
 			throw new IngresoExcepcion(NO_HAY_CELDAS_PARA_CARROS);
 		}
-		return reciboIngreso;
+		return recibo;
 	}
 }
