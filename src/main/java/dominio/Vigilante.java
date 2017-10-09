@@ -4,29 +4,31 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import dominio.reglas.ReglaIngreso;
+import dominio.reglas.ReglaSalida;
 import dominio.repositorio.RepositorioRecibo;
 import dominio.repositorio.RepositorioVehiculo;
 
 public class Vigilante {
 	private List<ReglaIngreso> reglasIngreso = new ArrayList<>();
+	private List<ReglaSalida> reglasSalida = new ArrayList<>();
 	private RepositorioRecibo repositorioRecibo;
 	private RepositorioVehiculo repositorioVehiculo;
 
-	public Vigilante(RepositorioRecibo repoRecibo,RepositorioVehiculo repoVehiculo, List<ReglaIngreso> reglasIngreso) {
+	public Vigilante(RepositorioRecibo repoRecibo,RepositorioVehiculo repoVehiculo, List<ReglaIngreso> reglasIngreso, List<ReglaSalida> reglaSalidas) {
 		this.repositorioRecibo = repoRecibo;
 		this.reglasIngreso=reglasIngreso;
 		this.repositorioVehiculo = repoVehiculo;
+		this.reglasSalida = reglaSalidas;
 	}
 
-	public Recibo ingresarVehiculo(Vehiculo vehiculo, Calendar horaIngreso) {
-		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(vehiculo, horaIngreso);
-		Recibo recibo = null;
-		for(ReglaIngreso regla : reglasIngreso) {
-			recibo = regla.verificarPosibilidadIngreso(solicitudIngreso);
-		}
+	public Recibo ingresarVehiculo(SolicitudIngreso solicitudIngreso) {
+		reglasIngreso.stream().forEach(regla -> regla.verificarPosibilidadIngreso(solicitudIngreso));
+	
+		Recibo recibo = new Recibo(solicitudIngreso.getVehiculo(), solicitudIngreso.getHoraIngreso());		
+		registrarVehiculo(solicitudIngreso.getVehiculo());
 		
-		registrarVehiculo(vehiculo);
 		repositorioRecibo.ingresarRecibo(recibo);
+	
 		return recibo;		
 	}
 	
@@ -36,5 +38,24 @@ public class Vigilante {
 		} catch (Exception e) {
 			repositorioVehiculo.registrarVehiculo(vehiculo);
 		}
-	}	
+	}
+
+	public Recibo generarReciboDeSalidaVehiculo(String placaCarroARetirar, Calendar horaSalida) {
+		Recibo recibo = obtenerReciboPorPlaca(placaCarroARetirar);
+		recibo.setHoraSalida(horaSalida);
+		recibo.setPrecio(calcularTotalValorAPagar(recibo));
+		return recibo;
+	}
+	
+	private double calcularTotalValorAPagar(Recibo reciboIngreso) {
+		double precioTotal=0d;
+		for (ReglaSalida reglaSalida: reglasSalida) {
+			precioTotal += reglaSalida.calcularValorAPagarServicioParqueadero(reciboIngreso);
+		}
+		return precioTotal;
+	}
+	
+	private Recibo obtenerReciboPorPlaca(String placa) {
+		return repositorioRecibo.obtenerReciboActivoPorPlaca(placa);
+	}
 }

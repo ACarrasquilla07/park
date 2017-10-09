@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dominio.Carro;
 import dominio.Moto;
 import dominio.Recibo;
+import dominio.SolicitudIngreso;
 import dominio.Vigilante;
 
 @EnableAutoConfiguration
@@ -28,13 +29,15 @@ public class ControladorVigilante {
 	@ResponseBody
 	public Recibo ingresarVehiculo(@RequestBody Carro carro) {
 		Calendar horaIngreso = Calendar.getInstance();
-		return vigilante.ingresarVehiculo(carro, horaIngreso);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+		return vigilante.ingresarVehiculo(solicitudIngreso);
 	}
 	
 	@RequestMapping(value = "/ingreso/moto", method = RequestMethod.POST)
 	@ResponseBody
 	public Recibo ingresarVehiculo(@RequestBody Moto moto) {
 		Calendar horaIngreso = Calendar.getInstance();
-		return vigilante.ingresarVehiculo(moto, horaIngreso);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngreso);
+		return vigilante.ingresarVehiculo(solicitudIngreso);
 	}
 }

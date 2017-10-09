@@ -2,8 +2,6 @@ package dominiotest.integracion;
 
 import static org.junit.Assert.*;
 import java.util.Calendar;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +11,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import dominio.Carro;
 import dominio.Moto;
 import dominio.Recibo;
+import dominio.SolicitudIngreso;
 import dominio.Vehiculo;
 import dominio.Vigilante;
-import dominio.excepcion.IngresoExcepcion;
-import dominio.util.Utilidad;
+import dominio.excepcion.ParqueaderoExcepcion;
+import dominio.util.UtilidadHoraYFecha;
 import rest.ParqueaderooApplication;
 
 @RunWith(SpringRunner.class)
@@ -32,11 +31,16 @@ public class ParqueaderoTests {
 	public void ingresarCarroQueYaIngreso() {
 		Vehiculo carro = new Carro("KHS011");
 		Calendar horaIngreso = Calendar.getInstance();
-		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+		
+		Recibo recibo1 = vigilante.ingresarVehiculo(solicitudIngreso);
+		
 		assertTrue(carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
+		
 		horaIngreso = Calendar.getInstance();
 		try {
-			vigilante.ingresarVehiculo(carro, horaIngreso);
+			solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
 		} catch (Exception e) {
 			assertEquals("EL vehiculo se encuentra adentro del parqueadero", e.getMessage());
@@ -47,8 +51,9 @@ public class ParqueaderoTests {
 	public void ingresarCarro() {
 		Vehiculo carro = new Carro("KHS009");
 		Calendar horaIngreso = Calendar.getInstance();
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
 		
-		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
+		Recibo recibo1 = vigilante.ingresarVehiculo(solicitudIngreso);
 		
 		assertTrue(carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
 	}
@@ -56,12 +61,13 @@ public class ParqueaderoTests {
 	@Test
 	public void ingresarCarroPlacaRestringidaViernes() {
 		Vehiculo carro = new Carro("AKS008");
-		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 6, 8, 0);
+		Calendar horaIngreso = UtilidadHoraYFecha.crearHora(2017, Calendar.OCTOBER, 6, 8, 0);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
 		
 		try {
-			vigilante.ingresarVehiculo(carro, horaIngreso);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
-		} catch (IngresoExcepcion e) {
+		} catch (ParqueaderoExcepcion e) {
 			assertEquals("No puede ingresar porque no esta en un dia habil", e.getMessage());
 		}
 	}
@@ -69,11 +75,12 @@ public class ParqueaderoTests {
 	@Test
 	public void ingresarCarroPlacaRestringidaMiercoles() {
 		Vehiculo carro2 = new Carro("ALO006");
-		Calendar horaIngreso2 = Utilidad.crearHora(2020, Calendar.OCTOBER, 14, 8, 0);
+		Calendar horaIngreso2 = UtilidadHoraYFecha.crearHora(2020, Calendar.OCTOBER, 14, 8, 0);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro2, horaIngreso2);
 		try {
-			vigilante.ingresarVehiculo(carro2, horaIngreso2);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
-		} catch (IngresoExcepcion e) {
+		} catch (ParqueaderoExcepcion e) {
 			assertEquals("No puede ingresar porque no esta en un dia habil", e.getMessage());
 		}
 	}
@@ -81,16 +88,22 @@ public class ParqueaderoTests {
 	@Test
 	public void ingresarCarroPlacaRestringidaDiaHabilDomingo() {
 		Vehiculo carro = new Carro("AKS005");
-		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 8, 8, 0);
-		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
+		Calendar horaIngreso = UtilidadHoraYFecha.crearHora(2017, Calendar.OCTOBER, 8, 8, 0);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+		
+		Recibo recibo1 = vigilante.ingresarVehiculo(solicitudIngreso);
+		
 		assertTrue(carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
 	}
 
 	@Test
 	public void ingresarCarroPlacaRestringidaDiaHabilLunes() {
 		Vehiculo carro = new Carro("AKS004");
-		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.OCTOBER, 9, 8, 0);
-		Recibo recibo1 = vigilante.ingresarVehiculo(carro, horaIngreso);
+		Calendar horaIngreso = UtilidadHoraYFecha.crearHora(2017, Calendar.OCTOBER, 9, 8, 0);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+		
+		Recibo recibo1 = vigilante.ingresarVehiculo(solicitudIngreso);
+		
 		assertTrue(carro.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
 	}
 
@@ -98,7 +111,10 @@ public class ParqueaderoTests {
 	public void ingresarMoto() {
 		Vehiculo moto = new Moto("DNS03A", 125);
 		Calendar horaIngreso = Calendar.getInstance();
-		Recibo recibo1 = vigilante.ingresarVehiculo(moto, horaIngreso);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngreso);
+		
+		Recibo recibo1 = vigilante.ingresarVehiculo(solicitudIngreso);
+		
 		assertTrue(moto.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
 	}
 
@@ -106,26 +122,34 @@ public class ParqueaderoTests {
 	public void salidaCarro() {
 		Vehiculo carro = new Carro("KAS902");
 		Calendar horaIngreso = Calendar.getInstance();
-		Recibo reciboEntrada = vigilante.ingresarVehiculo(carro, horaIngreso);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+		
+		Recibo reciboEntrada = vigilante.ingresarVehiculo(solicitudIngreso);
+		
 		assertTrue(carro.getPlaca().equals(reciboEntrada.getVehiculo().getPlaca()));
 	}
 
-//	@Test
-//	public void ingresarMotoAltoCilindraje() {
-//		Vehiculo BMW900 = new Moto("DNS01A", 501);
-//		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
-//		Recibo reciboIngreso = vigilante.ingresarVehiculo(BMW900, horaIngreso);
-//		assertTrue(BMW900.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
-//		assertTrue(reciboIngreso.getPrecio() == 2000d);
-//	}
+	@Test
+	public void ingresarMotoAltoCilindraje() {
+		Vehiculo BMW900 = new Moto("DNS01A", 501);
+		Calendar horaIngreso = UtilidadHoraYFecha.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(BMW900, horaIngreso);
+		
+		Recibo reciboIngreso = vigilante.ingresarVehiculo(solicitudIngreso);
+		assertTrue(BMW900.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
+
+	}
 
 	@Test
 	public void ingresarMotoBajoCilindraje() {
-		Vehiculo BMW900 = new Moto("DNS00A", 499);
-		Calendar horaIngreso = Utilidad.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
-		Recibo reciboIngreso = vigilante.ingresarVehiculo(BMW900, horaIngreso);
+		Vehiculo motoBajoCilindreaje = new Moto("DNS00A", 499);
+		Calendar horaIngreso = UtilidadHoraYFecha.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(motoBajoCilindreaje, horaIngreso);
+		
+		Recibo reciboIngreso = vigilante.ingresarVehiculo(solicitudIngreso);
+		
 		assertTrue(reciboIngreso.getPrecio() == 0d);
-		assertTrue(BMW900.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
+		assertTrue(motoBajoCilindreaje.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
 	}
 
 	@Test
@@ -135,30 +159,34 @@ public class ParqueaderoTests {
 				"BBB020", "BBB021", "BBB022" };
 		Vehiculo carro;
 		Calendar horaIngreso = Calendar.getInstance();
-
+		
 		for (int i = 0; i < CAPACIDAD_MAXIMA_CARROS; i++) {
 			carro = new Carro(Placas[i]);
-			Recibo reciboIngreso = vigilante.ingresarVehiculo(carro, horaIngreso);
+			SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+			Recibo reciboIngreso = vigilante.ingresarVehiculo(solicitudIngreso);
 			assertTrue(carro.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
 		}
 		carro = new Carro(Placas[20]);
 		try {
-			vigilante.ingresarVehiculo(carro, horaIngreso);
+			SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
 		} catch (Exception e) {
 			assertEquals("No hay celdas para carros disponibles", e.getMessage());
 		}
 		carro = new Carro(Placas[21]);
 		try {
-			vigilante.ingresarVehiculo(carro, horaIngreso);
+			SolicitudIngreso solicitudIngreso = new SolicitudIngreso(carro, horaIngreso);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
 		} catch (Exception e) {
 			assertEquals("No hay celdas para carros disponibles", e.getMessage());
 		}
-		Vehiculo BMW900 = new Moto("DNS00A", 499);
-		Calendar horaIngresoMoto = Utilidad.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
-		Recibo reciboIngresoMoto = vigilante.ingresarVehiculo(BMW900, horaIngresoMoto);
-		assertTrue(BMW900.getPlaca().equals(reciboIngresoMoto.getVehiculo().getPlaca()));
+		Vehiculo moto = new Moto("DNS00A", 499);
+		Calendar horaIngresoMoto = UtilidadHoraYFecha.crearHora(2017, Calendar.SEPTEMBER, 18, 9, 12);
+		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngresoMoto);
+		Recibo reciboIngresoMoto = vigilante.ingresarVehiculo(solicitudIngreso);
+		assertTrue(moto.getPlaca().equals(reciboIngresoMoto.getVehiculo().getPlaca()));
 	}
 
 	@Test
@@ -170,19 +198,22 @@ public class ParqueaderoTests {
 
 		for (int i = 0; i < CAPACIDAD_MAXIMA_MOTOS; i++) {
 			moto = new Moto(Placas[i], 125);
-			Recibo reciboIngreso = vigilante.ingresarVehiculo(moto, horaIngreso);
+			SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngreso);
+			Recibo reciboIngreso = vigilante.ingresarVehiculo(solicitudIngreso);
 			assertTrue(moto.getPlaca().equals(reciboIngreso.getVehiculo().getPlaca()));
 		}
 		moto = new Moto(Placas[10], 125);
 		try {
-			vigilante.ingresarVehiculo(moto, horaIngreso);
+			SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngreso);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
 		} catch (Exception e) {
 			assertEquals("No hay celdas para motos disponibles", e.getMessage());
 		}
 		moto = new Moto(Placas[11], 125);
 		try {
-			vigilante.ingresarVehiculo(moto, horaIngreso);
+			SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngreso);
+			vigilante.ingresarVehiculo(solicitudIngreso);
 			fail();
 		} catch (Exception e) {
 			assertEquals("No hay celdas para motos disponibles", e.getMessage());
