@@ -1,6 +1,7 @@
 package rest;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -14,7 +15,9 @@ import dominio.Carro;
 import dominio.Moto;
 import dominio.Recibo;
 import dominio.SolicitudIngreso;
+import dominio.Vehiculo;
 import dominio.Vigilante;
+import rest.dto.InformacionVehiculoDTO;
 import rest.dto.SolicitudSalida;
 
 @EnableAutoConfiguration
@@ -48,4 +51,18 @@ public class ControladorVigilante {
 		Calendar horaSalida = Calendar.getInstance();
 		return vigilante.generarReciboDeSalidaVehiculo(solicitudSalida.getPlaca(), horaSalida);
 	}
+	
+	@RequestMapping(value = "/lista/vehiculoEnParqueadero", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Vehiculo> listarVehiculosEnParqueadero() {
+		return vigilante.listarVehiculosEnParqueadero();
+	}
+	
+	@RequestMapping(value = "/lista/vehiculos", method = RequestMethod.GET)
+	@ResponseBody
+	public List<InformacionVehiculoDTO> listarInformacionVehiculosActivos() {
+		return vigilante.listarInformacionVehiculosEnParqueadero();
+	}
+	
+	
 }

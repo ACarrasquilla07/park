@@ -15,6 +15,8 @@ import persistencia.entidad.VehiculoEntity;
 
 @Repository
 public class RepositorioReciboPersistente implements RepositorioRecibo {
+	private static final String RECIBO_FIND_VEHICULOS_EN_PARQUEADERO = "Recibo.findVehiculosEnParqueadero";
+	private static final String RECIBO_FIND_RECIBOS_ACTIVOS = "Recibo.findRecibosActivos";
 	private static final String RECIBO_FIND_ACTIVO_BY_PLACA = "Recibo.findActivoByPlaca";
 	EntityManager entityManager;
 
@@ -47,7 +49,7 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 		query.setParameter("tipo", tipoVehiculo);
 		return (Long) query.getSingleResult();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private ReciboEntity findReciboActivoByPlaca(String placa) {
 		Query query = entityManager.createNamedQuery(RECIBO_FIND_ACTIVO_BY_PLACA);
@@ -55,7 +57,7 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 		List resultList = query.getResultList();
 		return !resultList.isEmpty() ? (ReciboEntity) resultList.get(0) : null;
 	}
-	
+
 	@Override
 	public Recibo obtenerReciboActivoPorPlaca(String placa) {
 		ReciboEntity reciboEntity = findReciboActivoByPlaca(placa);
@@ -65,12 +67,11 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 	@Override
 	public void actualizarReciboParaSalida(Recibo recibo) {
 		ReciboEntity reciboEntity = findReciboActivoByPlaca(recibo.getVehiculo().getPlaca());
-		if(reciboEntity != null) {
+		if (reciboEntity != null) {
 			reciboEntity.setHoraSalida(recibo.getHoraSalida());
 			reciboEntity.setPrecio(recibo.getPrecio());
 		}
 	}
-	
 
 	@Override
 	public List<Vehiculo> listarVehiculosEnParqueadero() {
@@ -79,14 +80,31 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 		for (VehiculoEntity vehiculoEntity : listaVehiculosEntityEnPark) {
 			Vehiculo vehiculo = VehiculoBuilder.convertirAVehiculo(vehiculoEntity);
 			listaVehiculosEnParqueadero.add(vehiculo);
-			
+
 		}
 		return listaVehiculosEntityEnPark != null ? listaVehiculosEnParqueadero : null;
 	}
-	
-	private List<VehiculoEntity> listarVehiculosEntityEnParqueadero(){
-		Query query = entityManager.createNamedQuery("Recibo.findVehiculosEnParqueadero");
+
+	private List<VehiculoEntity> listarVehiculosEntityEnParqueadero() {
+		Query query = entityManager.createNamedQuery(RECIBO_FIND_VEHICULOS_EN_PARQUEADERO);
 		List<VehiculoEntity> resultList = query.getResultList();
+		return !resultList.isEmpty() ? resultList : null;
+	}
+
+	@Override
+	public List<Recibo> listarRecivosActivos() {
+		List<ReciboEntity> listaRecibosEntityActivos = listarRecivosEntityActivos();
+		List<Recibo> listaRecibosActivos = new ArrayList<>();
+		for (ReciboEntity reciboEntity : listaRecibosEntityActivos) {
+			Recibo recibo = ReciboBuilder.convertirARecibo(reciboEntity);
+			listaRecibosActivos.add(recibo);
+		}
+		return listaRecibosEntityActivos != null ? listaRecibosActivos : null;
+	}
+
+	private List<ReciboEntity> listarRecivosEntityActivos() {
+		Query query = entityManager.createNamedQuery(RECIBO_FIND_RECIBOS_ACTIVOS);
+		List<ReciboEntity> resultList = query.getResultList();
 		return !resultList.isEmpty() ? resultList : null;
 	}
 }

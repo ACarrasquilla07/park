@@ -1,5 +1,6 @@
 package dominiotest.integracion;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
@@ -51,7 +52,19 @@ public class VehiculosEnParqueaderoTest {
 	public void listarVehiculosEnParqueaderoTest() {
 		ingresarCarro();
 		ingresarMoto();
+		
 		List<Vehiculo> listaVehiculosEnParqueadero = vigilante.listarVehiculosEnParqueadero();
+		
+		assertTrue(listaVehiculosEnParqueadero.size() == 2);
+	}
+	
+	@Test
+	public void listarRecibosEnParqueaderoTest() {
+		ingresarCarro();
+		ingresarMoto();
+		
+		List<Recibo> listaVehiculosEnParqueadero = vigilante.listarRecibosActivos();
+		
 		assertTrue(listaVehiculosEnParqueadero.size() == 2);
 	}
 }

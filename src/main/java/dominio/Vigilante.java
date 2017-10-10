@@ -9,6 +9,7 @@ import dominio.reglas.ReglaIngreso;
 import dominio.reglas.ReglaSalida;
 import dominio.repositorio.RepositorioRecibo;
 import dominio.repositorio.RepositorioVehiculo;
+import rest.dto.InformacionVehiculoDTO;
 
 public class Vigilante {
 	private List<ReglaIngreso> reglasIngreso = new ArrayList<>();
@@ -35,7 +36,7 @@ public class Vigilante {
 	
 	private void registrarVehiculo(Vehiculo vehiculo) {
 		try {
-			repositorioVehiculo.encontrarVehiculoPorPlaca(vehiculo.getPlaca());	//--------------- 
+			repositorioVehiculo.encontrarVehiculoPorPlaca(vehiculo.getPlaca());	//---------- Se debe quitar el try y preguntar si es null
 		} catch (Exception e) {
 			repositorioVehiculo.registrarVehiculo(vehiculo);
 		}
@@ -64,11 +65,21 @@ public class Vigilante {
 		}
 		return recibo;
 	}
-
+	
+	public List<InformacionVehiculoDTO> listarInformacionVehiculosEnParqueadero() {
+		List<Recibo> recivosAvticos=listarRecibosActivos();
+		return InformacionVehiculoDTO.convertirListaReciboAInformacionVehiculo(recivosAvticos);
+	}
+	
 	public List<Vehiculo> listarVehiculosEnParqueadero() {
 		return repositorioRecibo.listarVehiculosEnParqueadero();
 	}
+	
+	public List<Recibo> listarRecibosActivos() {
+		return repositorioRecibo.listarRecivosActivos();
+	}
 }
+
 
 
 

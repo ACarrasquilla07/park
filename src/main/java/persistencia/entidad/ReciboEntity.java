@@ -16,7 +16,8 @@ import javax.persistence.NamedQuery;
 	@NamedQuery(name = "Recibo.findActivoByPlaca", query = "SELECT recibo FROM Recibo recibo WHERE recibo.vehiculoEntity.placa = :placa AND recibo.horaSalida IS NULL"),
 	@NamedQuery(name = "Recibo.findAll", query = "SELECT recibo from Recibo recibo"),
 	@NamedQuery(name="Recibo.contar", query = "SELECT COUNT(*) from  Recibo recibo WHERE recibo.vehiculoEntity.tipo = :tipo"),
-	@NamedQuery(name = "Recibo.findVehiculosEnParqueadero", query = "SELECT recibo.vehiculoEntity FROM Recibo recibo WHERE recibo.horaSalida IS NULL")
+	@NamedQuery(name = "Recibo.findVehiculosEnParqueadero", query = "SELECT recibo.vehiculoEntity FROM Recibo recibo WHERE recibo.horaSalida IS NULL"),
+	@NamedQuery(name = "Recibo.findRecibosActivos", query = "SELECT recibo FROM Recibo recibo WHERE recibo.horaSalida IS NULL")
 })
 public class ReciboEntity {
 	@Id

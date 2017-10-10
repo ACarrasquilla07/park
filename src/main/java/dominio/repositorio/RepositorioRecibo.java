@@ -11,4 +11,5 @@ public interface RepositorioRecibo {
 	public Recibo obtenerReciboActivoPorPlaca(String placa);
 	public void actualizarReciboParaSalida(Recibo recibo);
 	public List<Vehiculo> listarVehiculosEnParqueadero();
+	public List<Recibo> listarRecivosActivos();
 }
