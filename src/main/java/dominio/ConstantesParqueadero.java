@@ -9,7 +9,5 @@ public class ConstantesParqueadero {
 	public static final double VALOR_HORA_MOTO =500d;
 	public static final double MONTO_POR_RESTRICCION_CILINDRAJE = 2000d;
 	private ConstantesParqueadero() {
-		super();
 	}
-	
 }

@@ -15,6 +15,7 @@ import dominio.Moto;
 import dominio.Recibo;
 import dominio.SolicitudIngreso;
 import dominio.Vigilante;
+import rest.dto.SolicitudSalida;
 
 @EnableAutoConfiguration
 @RestController
@@ -39,5 +40,12 @@ public class ControladorVigilante {
 		Calendar horaIngreso = Calendar.getInstance();
 		SolicitudIngreso solicitudIngreso = new SolicitudIngreso(moto, horaIngreso);
 		return vigilante.ingresarVehiculo(solicitudIngreso);
+	}
+	
+	@RequestMapping(value = "/salida/vehiculo", method = RequestMethod.POST)
+	@ResponseBody
+	public Recibo retirarVehiculo(@RequestBody SolicitudSalida solicitudSalida) {
+		Calendar horaSalida = Calendar.getInstance();
+		return vigilante.generarReciboDeSalidaVehiculo(solicitudSalida.getPlaca(), horaSalida);
 	}
 }

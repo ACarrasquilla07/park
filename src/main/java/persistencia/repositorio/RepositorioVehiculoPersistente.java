@@ -36,6 +36,6 @@ public class RepositorioVehiculoPersistente implements RepositorioVehiculo {
 	@Override
 	public Vehiculo encontrarVehiculoPorPlaca(String placa) {
 		VehiculoEntity vehiculoEntity = findVehiculoEtityByPlaca(placa);
-		return VehiculoBuilder.convertirAVehiculo(vehiculoEntity);		
+		return vehiculoEntity != null ? VehiculoBuilder.convertirAVehiculo(vehiculoEntity) : null;
 	}
 }

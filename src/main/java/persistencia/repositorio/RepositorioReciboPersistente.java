@@ -1,12 +1,15 @@
 package persistencia.repositorio;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import dominio.Recibo;
+import dominio.Vehiculo;
 import dominio.repositorio.RepositorioRecibo;
 import persistencia.builder.ReciboBuilder;
+import persistencia.builder.VehiculoBuilder;
 import persistencia.entidad.ReciboEntity;
 import persistencia.entidad.VehiculoEntity;
 
@@ -57,5 +60,33 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 	public Recibo obtenerReciboActivoPorPlaca(String placa) {
 		ReciboEntity reciboEntity = findReciboActivoByPlaca(placa);
 		return ReciboBuilder.convertirARecibo(reciboEntity != null ? reciboEntity : null);
+	}
+
+	@Override
+	public void actualizarReciboParaSalida(Recibo recibo) {
+		ReciboEntity reciboEntity = findReciboActivoByPlaca(recibo.getVehiculo().getPlaca());
+		if(reciboEntity != null) {
+			reciboEntity.setHoraSalida(recibo.getHoraSalida());
+			reciboEntity.setPrecio(recibo.getPrecio());
+		}
+	}
+	
+
+	@Override
+	public List<Vehiculo> listarVehiculosEnParqueadero() {
+		List<VehiculoEntity> listaVehiculosEntityEnPark = listarVehiculosEntityEnParqueadero();
+		List<Vehiculo> listaVehiculosEnParqueadero = new ArrayList<>();
+		for (VehiculoEntity vehiculoEntity : listaVehiculosEntityEnPark) {
+			Vehiculo vehiculo = VehiculoBuilder.convertirAVehiculo(vehiculoEntity);
+			listaVehiculosEnParqueadero.add(vehiculo);
+			
+		}
+		return listaVehiculosEntityEnPark != null ? listaVehiculosEnParqueadero : null;
+	}
+	
+	private List<VehiculoEntity> listarVehiculosEntityEnParqueadero(){
+		Query query = entityManager.createNamedQuery("Recibo.findVehiculosEnParqueadero");
+		List<VehiculoEntity> resultList = query.getResultList();
+		return !resultList.isEmpty() ? resultList : null;
 	}
 }
