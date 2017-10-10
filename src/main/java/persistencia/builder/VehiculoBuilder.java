@@ -1,7 +1,5 @@
 package persistencia.builder;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import dominio.Carro;
 import dominio.Moto;
 import dominio.Vehiculo;
