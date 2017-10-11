@@ -76,7 +76,11 @@ public class Vigilante {
 	}
 	
 	public List<Recibo> listarRecibosActivos() {
-		return repositorioRecibo.listarRecivosActivos();
+		List<Recibo> listaRecibosActivos = repositorioRecibo.listarRecivosActivos();
+		if(listaRecibosActivos==null) {
+			throw new ParqueaderoExcepcion("El parqueadero esta vacio");
+		}
+		return listaRecibosActivos;
 	}
 }
 

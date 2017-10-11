@@ -2,6 +2,8 @@ package dominiotest.integracion;
 
 import static org.junit.Assert.*;
 import java.util.Calendar;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,5 +221,9 @@ public class ParqueaderoTests {
 			assertEquals("No hay celdas para motos disponibles", e.getMessage());
 		}
 		ingresarCarro();
+		
+		List<Recibo> listaVehiculosEnParqueadero = vigilante.listarRecibosActivos();
+		
+		assertTrue(listaVehiculosEnParqueadero.size() == 11);
 	}
 }

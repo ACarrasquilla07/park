@@ -46,6 +46,7 @@ public class VehiculosEnParqueaderoTest {
 		Recibo recibo1 = vigilante.ingresarVehiculo(solicitudIngreso);
 		
 		assertTrue(moto.getPlaca().equals(recibo1.getVehiculo().getPlaca()));
+		assertEquals(((Moto) moto).getCilindraje(), 125);
 	}
 	
 	@Test
